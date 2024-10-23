@@ -1,0 +1,2 @@
+-Purpose of each directory and file.
+-Instructions on how to install dependencies and run the application.
