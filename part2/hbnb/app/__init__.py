@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 from flask import Flask
 from flask_restx import Api
 from part2.hbnb.app.api.v1.users import api as users_ns

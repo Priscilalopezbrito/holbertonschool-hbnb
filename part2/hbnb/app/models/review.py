@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 from datetime import datetime
 
 from part2.hbnb.app.models.base import BaseModel

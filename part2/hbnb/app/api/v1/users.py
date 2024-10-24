@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 from flask_restx import Namespace, Resource, fields
 
 from part2.hbnb.app.models import user
