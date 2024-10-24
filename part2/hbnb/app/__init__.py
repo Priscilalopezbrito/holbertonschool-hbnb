@@ -2,6 +2,7 @@
 from flask import Flask
 from flask_restx import Api
 from part2.hbnb.app.api.v1.users import api as users_ns
+from part2.hbnb.app.api.v1.places import api as places_ns
 
 
 def create_app():
@@ -13,5 +14,6 @@ def create_app():
 
     # Register the users namespace
     api.add_namespace(users_ns, path='/api/v1/users')
+    api.add_namespace(places_ns, path='/api/v1/places')
 
     return app

@@ -1,6 +1,7 @@
 #!/usr/bin/python3
-from part2.hbnb.app.persistence.repository import InMemoryRepository
 from part2.hbnb.app.models.user import User
+from part2.hbnb.app.models.place import Place
+from part2.hbnb.app.persistence.repository import InMemoryRepository
 
 
 class HBnBFacade:
@@ -10,6 +11,7 @@ class HBnBFacade:
         self.review_repo = InMemoryRepository()
         self.amenity_repo = InMemoryRepository()
 
+    # User
     # Placeholder method for creating a user
     def create_user(self, user_data):
         user = User(**user_data)
@@ -35,7 +37,65 @@ class HBnBFacade:
         self.user_repo.update(user, user_data)
         return user
 
-    # Placeholder method for fetching a place by ID
+    # Amenity
+    def create_amenity(self, amenity_data):
+        # Placeholder for logic to create an amenity
+        pass
+
+    def get_amenity(self, amenity_id):
+        # Placeholder for logic to retrieve an amenity by ID
+        pass
+
+    def get_all_amenities(self):
+        # Placeholder for logic to retrieve all amenities
+        pass
+
+    def update_amenity(self, amenity_id, amenity_data):
+        # Placeholder for logic to update an amenity
+        pass
+
+    # Place
+    @staticmethod
+    def create_place(place_data):
+        place = Place(**place_data)
+        return place
+
     def get_place(self, place_id):
-        # Logic will be implemented in later tasks
+        return self.place_repo.get(place_id)
+
+    def get_all_places(self):
+        return self.place_repo.get_all()
+
+    def update_place(self, place_id, place_data):
+        place = self.place_repo.get(place_id)
+        if not place:
+            return None
+        for key, value in place_data.items():
+            setattr(place, key, value)
+            self.place_repo.update(place, place_data)
+            return place
+
+    # Review
+    def create_review(self, review_data):
+        # Placeholder for logic to create a review, including validation for user_id, place_id, and rating
+        pass
+
+    def get_review(self, review_id):
+        # Placeholder for logic to retrieve a review by ID
+        pass
+
+    def get_all_reviews(self):
+        # Placeholder for logic to retrieve all reviews
+        pass
+
+    def get_reviews_by_place(self, place_id):
+        # Placeholder for logic to retrieve all reviews for a specific place
+        pass
+
+    def update_review(self, review_id, review_data):
+        # Placeholder for logic to update a review
+        pass
+
+    def delete_review(self, review_id):
+        # Placeholder for logic to delete a review
         pass

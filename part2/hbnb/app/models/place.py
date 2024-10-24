@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 from part2.hbnb.app.models.base import BaseModel
+from part2.hbnb.app.models.user import User
 
 
 class Place(BaseModel):
@@ -13,6 +14,20 @@ class Place(BaseModel):
         self.owner = owner
         self.reviews = []  # List to store related reviews
         self.amenities = []  # List to store related amenities
+
+        # Validations
+        self.title_validation()
+        self.owner_validation()
+
+    def title_validation(self):
+        # Validates required length of title
+        if not self.title or len(self.title) > 100:
+            raise ValueError('Maximum length of 100 characters')
+
+    def owner_validation(self):
+        # Ensures the owner exists
+        if not isinstance(self.owner, User):
+            raise ValueError('Owner must be a User')
 
     def add_review(self, review):
         """Add a review to the place."""
