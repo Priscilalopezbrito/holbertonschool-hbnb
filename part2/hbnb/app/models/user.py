@@ -12,10 +12,8 @@ class User(BaseModel):
         self.email = email
         self.is_admin = is_admin
 
-        # Validates first and last name
+        # Validations
         self.validate_name()
-
-        # Validates email format and uniqueness
         self.validate_email()
 
     def validate_name(self):

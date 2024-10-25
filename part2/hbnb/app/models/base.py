@@ -19,3 +19,13 @@ class BaseModel:
             if hasattr(self, key):
                 setattr(self, key, value)
         self.save()  # Update the updated_at timestamp
+
+    def to_dict(self):
+        """Convert the object attributes to a dictionary for serialization"""
+        result = self.__dict__.copy()
+        # Convert datetime fields to ISO format
+        if 'created_at' in result:
+            result['created_at'] = result['created_at'].isoformat()
+        if 'updated_at' in result:
+            result['updated_at'] = result['updated_at'].isoformat()
+        return result
