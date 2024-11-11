@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 from flask_restx import Namespace, Resource, fields
 
-from part2.hbnb.app.models import user
-from part2.hbnb.app.services import facade
+# from part3.hbnb.app.models import user
+from part3.hbnb.app.services import facade
 
 api = Namespace('users', description='User operations')
 

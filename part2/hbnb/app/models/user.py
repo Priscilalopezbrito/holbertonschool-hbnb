@@ -3,7 +3,7 @@ from part2.hbnb.app.models.base import BaseModel
 
 
 class User(BaseModel):
-    emails = set()  # Class-level set to store unique emails
+    # emails = set()  # Class-level set to store unique emails
 
     def __init__(self, first_name, last_name, email, is_admin=False):
         super().__init__()
@@ -25,7 +25,7 @@ class User(BaseModel):
             raise ValueError('Last name must be less than 50 characters.')
 
     def validate_email(self):
-        # Checks valid email format
+        # Checks valid email format  verify
         if not self.email or "@" not in self.email or "." not in self.email:
             raise ValueError('Invalid email format.')
 
