@@ -1,6 +1,8 @@
 #!/usr/bin/python3
 from flask_restx import Namespace, Resource, fields
 from part3.hbnb.app.services import facade
+from flask_jwt_extended import jwt_required, get_jwt_identity
+
 
 api = Namespace('places', description='Place operations')
 
@@ -28,14 +30,19 @@ place_model = api.model('Place', {
     'amenities': fields.List(fields.String, required=True, description="List of amenities ID's")
 })
 
+
 @api.route('/')
 class PlaceList(Resource):
+    @jwt_required()  # task 3: Secure the Endpoints with JWT Authentication
     @api.expect(place_model)
     @api.response(201, 'Place successfully created')
     @api.response(400, 'Invalid input data')
     def post(self):
         """Register a new place"""
+        current_user = get_jwt_identity()  # task 3: Identify currently logged-in user
         place_data = api.payload
+        # Assign id of authenticated user to owner_id
+        place_data['owner_id'] = current_user  # task 3
         try:
             new_place = facade.create_place(place_data)
 
@@ -115,6 +122,7 @@ class PlaceList(Resource):
         except Exception as e:
             api.abort(400, str(e))
 
+
 @api.route('/<place_id>')
 class PlaceResource(Resource):
     @api.response(200, 'Place details retrieved successfully')
@@ -158,17 +166,23 @@ class PlaceResource(Resource):
         except Exception as e:
             api.abort(400, str(e))
 
+    @jwt_required()  # task 3: Secure the Endpoints with JWT Authentication
     @api.expect(place_model)
     @api.response(200, 'Place updated successfully')
     @api.response(404, 'Place not found')
     @api.response(400, 'Invalid input data')
     def put(self, place_id):
         """Update a place's information"""
+        current_user = get_jwt_identity()  # task 3: Identify currently logged-in user
         place_data = api.payload
         try:
             updated_place = facade.update_place(place_id, place_data)
             if not updated_place:
                 return {'error': 'Place not found'}, 404
+
+            # task 3: If user is not owner, 403 error "Unauthorized action."
+            if updated_place.owner.id != current_user:
+                return {'error': 'Unauthorized action.'}, 403
 
             # Manually build the dictionary representation of amenities
             amenities = [

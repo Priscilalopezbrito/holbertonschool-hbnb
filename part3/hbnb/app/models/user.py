@@ -1,10 +1,10 @@
 #!/usr/bin/python3
 from part3.hbnb.app.models.base import BaseModel
 from part3.hbnb.app import bcrypt  # Import here to avoid circular import
+import re
 
 
 class User(BaseModel):
-    # emails = set()  # Class-level set to store unique emails
 
     def __init__(self, first_name, last_name, email, is_admin=False, password=None):
         super().__init__()
@@ -27,24 +27,17 @@ class User(BaseModel):
             raise ValueError('Last name must be less than 50 characters.')
 
     def validate_email(self):
+        from part3.hbnb.app.services.facade import HBnBFacade
+        facade = HBnBFacade()
         # Checks valid email format  verify
-        if not self.email or "@" not in self.email or "." not in self.email:
+        email_regex = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
+        if not self.email or not re.match(email_regex, self.email):
             raise ValueError('Invalid email format.')
 
         # Checks email uniqueness
-        """
-        if self.email in User.emails:
-            raise ValueError('Email already exists.')
-
-            # If valid and unique, add to the set of emails
-        User.emails.add(self.email)
-        
-        
-        **************************************************************************
-        nota: usar get_user_by_email() para validar si el email ya esta registrado
-        **************************************************************************
-        
-        """
+        existing_user = facade.get_user_by_email(self.email)
+        if existing_user:
+            raise ValueError("A user with this email already exists.")
 
     # This function should take a plaintext password,
     # hash it using bcrypt,
@@ -55,7 +48,7 @@ class User(BaseModel):
         """Hashes the password before storing it."""
         self.password = bcrypt.generate_password_hash(password).decode('utf-8')
 
-    # compare a plaintext password with the hashed
+    # Compare a plaintext password with the hashed
     # password stored in the password field, returning
     # True if they match and False otherwise
 
@@ -70,10 +63,8 @@ class User(BaseModel):
         if last_name:
             self.last_name = last_name
             self.validate_name()
-        if email:  # Cambio en validacion email unico
-            old_email = self.email
+        if email:
             self.email = email
-            User.emails.discard(old_email)
             self.validate_email()
 
         if is_admin is not None:

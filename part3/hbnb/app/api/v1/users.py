@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 from flask_restx import Namespace, Resource, fields
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 # from part3.hbnb.app.models import user
 from part3.hbnb.app.services import facade
@@ -18,6 +19,7 @@ user_model = api.model('User', {
 
 @api.route('/')
 class UserList(Resource):
+
     @api.expect(user_model, validate=True)
     @api.response(201, 'User successfully created')
     @api.response(400, 'Email already registered')
@@ -65,12 +67,22 @@ class Users(Resource):
 
 @api.route('/update/<user_id>')
 class UserResource(Resource):
+    @jwt_required()
     @api.expect(user_model, validate=True)
     @api.response(200, 'User updated successfully')
     @api.response(404, 'User not found')
     def put(self, user_id):
         """Update user information"""
+        current_user = get_jwt_identity()  # task 3
+        if current_user != user_id:
+            return {'error': 'Unauthorized action.'}, 401
+
         user_data = api.payload
+
+        # Prevent modification email, password
+        if 'email' in user_data or 'password' in user_data:
+            return {'error': 'You cannot modify email or password.'}, 400
+
         updated_user = facade.update_user(user_id, user_data)
         if not updated_user:
             return {'error': 'User not found'}, 404
