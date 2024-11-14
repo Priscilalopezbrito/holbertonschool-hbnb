@@ -12,6 +12,7 @@ class DevelopmentConfig(Config):
     SQLALCHEMY_DATABASE_URI = 'sqlite:///development.db'  # task 6
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
+
 config = {
     'development': DevelopmentConfig,
     'default': DevelopmentConfig

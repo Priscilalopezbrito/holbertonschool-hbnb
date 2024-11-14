@@ -1,9 +1,21 @@
 #!/usr/bin/python3
-from part3.hbnb.app.models.base import BaseModel
+from part3.hbnb.app.models.baseclass import BaseModel
 from part3.hbnb.app.models.user import User
+from part3.hbnb.app import bcrypt, db
+import uuid
+import re
 
 
 class Place(BaseModel):
+    __tablename__ = 'places'  # task 8
+
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.String, nullable=True)
+    price = db.Column(db.Float, nullable=False)
+    latitude = db.Column(db.Float, nullable=True)
+    longitude = db.Column(db.Float, nullable=True)
+
     def __init__(self, title, description, price, latitude, longitude, owner, amenities):
         super().__init__()
         self.title = title

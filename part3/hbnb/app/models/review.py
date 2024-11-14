@@ -1,9 +1,18 @@
-from part3.hbnb.app.models.base import BaseModel
+from part3.hbnb.app.models.baseclass import BaseModel
 from part3.hbnb.app.models.place import Place
 from part3.hbnb.app.models.user import User
+from part3.hbnb.app import bcrypt, db
+import uuid
+import re
 
 
 class Review(BaseModel):
+    __tablename__ = 'reviews'
+
+    id = db.Column(db.Integer, primary_key=True)
+    text = db.Column(db.String, nullable=False)
+    rating = db.Column(db.Integer, nullable=False)
+
     def __init__(self, text, rating, place, user):
         super().__init__()
         self.text = text

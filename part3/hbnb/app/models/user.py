@@ -1,10 +1,21 @@
 #!/usr/bin/python3
-from part3.hbnb.app.models.base import BaseModel
-from part3.hbnb.app import bcrypt  # Import here to avoid circular import
+from .baseclass import BaseModel
+from part3.hbnb.app import bcrypt, db
+# import uuid  # Import here to avoid circular import
 import re
 
 
 class User(BaseModel):
+    __tablename__ = 'users'  # task 7
+
+    # Add `extend_existing=True` to avoid conflicts if table already exists
+    __table_args__ = {'extend_existing': True}
+
+    first_name = db.Column(db.String(50), nullable=False)
+    last_name = db.Column(db.String(50), nullable=False)
+    email = db.Column(db.String(120), nullable=False, unique=True)
+    password = db.Column(db.String(128), nullable=False)
+    is_admin = db.Column(db.Boolean, default=False)
 
     def __init__(self, first_name, last_name, email, is_admin=False, password=None):
         super().__init__()

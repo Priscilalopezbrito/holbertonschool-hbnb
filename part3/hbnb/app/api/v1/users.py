@@ -2,8 +2,8 @@
 from flask_restx import Namespace, Resource, fields
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
-# from part3.hbnb.app.models import user
-from part3.hbnb.app.services import facade
+# from ...models import user
+from ...services import facade
 
 api = Namespace('users', description='User operations')
 
@@ -21,6 +21,7 @@ update_user_model = api.model('UpdateUser', {
     'last_name': fields.String(description='Last name of the user'),
     'is_admin': fields.Boolean(description='Whether the user is an admin')
 })
+
 
 @api.route('/')
 class UserList(Resource):
