@@ -31,7 +31,6 @@ class Login(Resource):
         # Step 4: Return the JWT token to the client
         return {'access_token': access_token}, 200
 
-
     @api.route('/protected')
     class ProtectedResource(Resource):
         @jwt_required()
@@ -39,4 +38,3 @@ class Login(Resource):
             current_user = get_jwt_identity()
             user_id = current_user.get("id") if isinstance(current_user, dict) else "unknown"
             return {'message': f'Hello, user {user_id}'}, 200
-

@@ -4,6 +4,7 @@ from part3.hbnb.app.models.user import User
 from part3.hbnb.app.models.amenity import Amenity
 from part3.hbnb.app.models.place import Place
 from part3.hbnb.app.models.review import Review
+# from part3.hbnb.app.persistence.repository import SQLAlchemyRepository
 
 
 class HBnBFacade:
@@ -12,6 +13,12 @@ class HBnBFacade:
         self.place_repo = InMemoryRepository()
         self.review_repo = InMemoryRepository()
         self.amenity_repo = InMemoryRepository()
+
+        # SQLAlchemy task 6
+        # self.user_repo = SQLAlchemyRepository(User)
+        # self.place_repo = SQLAlchemyRepository(Place)
+        # self.review_repo = SQLAlchemyRepository(Review)
+        # self.amenity_repo = SQLAlchemyRepository(Amenity)
 
     # USER
     def create_user(self, user_data):
@@ -59,11 +66,39 @@ class HBnBFacade:
             return None
         for key, value in amenity_data.items():
             setattr(amenity, key, value)
-        self.amenity_repo.update(amenity, amenity_data)
+        self.amenity_repo.update(amenity_id, amenity_data)
         return amenity
 
     # PLACE
     def create_place(self, place_data):
+        # Retrieve the owner by ID
+        owner_id = place_data.pop('owner_id', None)
+        if not owner_id:
+            raise ValueError("Owner ID is required.")
+
+        owner = self.get_user(owner_id)
+        if not owner:
+            raise Exception('Owner not found')
+
+        # Ensure amenities are in the correct format
+        amenity_ids = place_data.get('amenities', [])
+        if not isinstance(amenity_ids, list):
+            raise ValueError("Amenities should be provided as a list of IDs.")
+        amenities = []
+        for amenity_id in amenity_ids:
+            amenity = self.amenity_repo.get(amenity_id)
+            if amenity:
+                amenities.append(amenity)
+
+        # Create the Place instance without amenities for now
+        place = Place(owner=owner, **place_data)
+        place.amenities = amenities  # Assign amenities to the Place instance
+
+        # Add the Place instance to the repository
+        self.place_repo.add(place)
+
+        return place
+    '''
         # Retrieve the owner by ID
         owner_id = place_data.pop('owner_id')
         owner = self.get_user(owner_id)
@@ -83,11 +118,12 @@ class HBnBFacade:
 
         # Assign the list of amenities to the Place instance
         place.amenities = amenities
-
         # Add the Place instance to the repository
         self.place_repo.add(place)
 
         return place
+    '''
+
 
     def get_place(self, place_id):
         return self.place_repo.get(place_id)
