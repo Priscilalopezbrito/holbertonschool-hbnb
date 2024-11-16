@@ -3,15 +3,15 @@ from part3.hbnb.app import db
 
 
 class Review(BaseModel):
-    __tablename__ = 'reviews'
+    __tablename__ = 'review'
     __table_args__ = {'extend_existing': True}
 
     id = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.String, nullable=False)
     rating = db.Column(db.Integer, nullable=False)
 
-    place_id = db.Column(db.Integer, db.ForeignKey('places.id'), nullable=False)  # Foreign key to Place
-    # user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)  # Foreign key to User
+    place_id = db.Column(db.Integer, db.ForeignKey('place.id'), nullable=False)  # Foreign key to Place
+    # user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)  # Foreign key to User
 
     # Define the relationship to connect with users
     # user = db.relationship('User', back_populates='reviews')

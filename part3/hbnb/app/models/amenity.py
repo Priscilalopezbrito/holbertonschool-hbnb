@@ -6,7 +6,7 @@ import re
 
 
 class Amenity(BaseModel):
-    __tablename__ = 'amenities'
+    __tablename__ = 'amenity'
 
     __table_args__ = {'extend_existing': True}
 

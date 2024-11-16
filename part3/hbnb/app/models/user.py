@@ -5,7 +5,7 @@ import re
 
 
 class User(BaseModel):
-    __tablename__ = 'users'  # task 7
+    __tablename__ = 'user'  # task 7
     __table_args__ = {'extend_existing': True}
 
     first_name = db.Column(db.String(50), nullable=False)

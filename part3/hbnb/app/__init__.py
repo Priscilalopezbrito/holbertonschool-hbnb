@@ -26,7 +26,22 @@ def create_app(config_class="config.DevelopmentConfig"):
     jwt.init_app(app)
     db.init_app(app)
 
-    api = Api(app, version='1.0', title='HBnB API', description='HBnB Application API')
+    authorizations = {
+        "BearerAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header",
+        }
+    }
+
+    api = Api(
+        app,
+        version='1.0',
+        title='HBnB API',
+        description='HBnB Application API',
+        authorizations=authorizations,
+        security="BearerAuth",
+    )
 
     api.add_namespace(users_ns, path='/api/v1/users')
     api.add_namespace(places_ns, path='/api/v1/places')

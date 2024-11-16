@@ -17,7 +17,7 @@ place_amenity = db.Table(
 
 
 class Place(BaseModel):
-    __tablename__ = 'places'  # task 8
+    __tablename__ = 'place'  # task 8
     # Allow reuse if table already exists in MetaData
     __table_args__ = {'extend_existing': True}
 
@@ -28,7 +28,7 @@ class Place(BaseModel):
     latitude = db.Column(db.Float, nullable=True)
     longitude = db.Column(db.Float, nullable=True)
 
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)  # task 9
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)  # task 9
 
     # One-to-Many relationship with Review
     reviews = db.relationship('hbnb.app.models.review.Review', backref='place', lazy=True)
