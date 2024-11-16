@@ -1,6 +1,5 @@
 from part3.hbnb.app.models.user import User
-from part3.hbnb.app import db
-from part3.hbnb.app.persistence.sqlalchemyrepository import SQLAlchemyRepository
+from part3.hbnb.app.persistence.repository import SQLAlchemyRepository
 
 
 class UserRepository(SQLAlchemyRepository):
@@ -9,3 +8,5 @@ class UserRepository(SQLAlchemyRepository):
 
     def get_user_by_email(self, email):
         return self.model.query.filter_by(email=email).first()
+
+

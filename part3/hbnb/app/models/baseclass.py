@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 import uuid
 from datetime import datetime
-from hbnb.app import db # task 7
+from ...app import db  # task 7
 
 
 class BaseModel(db.Model):  # task 7
@@ -12,7 +12,8 @@ class BaseModel(db.Model):  # task 7
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     def __init__(self):
-        self.id = str(uuid.uuid4())
+        if not hasattr(self, 'id'):  # Allow subclasses to override the id field
+            self.id = str(uuid.uuid4())
         self.created_at = datetime.now()
         self.updated_at = datetime.now()
 

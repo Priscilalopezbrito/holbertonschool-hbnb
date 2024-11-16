@@ -1,14 +1,11 @@
 #!/usr/bin/python3
 from .baseclass import BaseModel
 from part3.hbnb.app import bcrypt, db
-# import uuid  # Import here to avoid circular import
 import re
 
 
 class User(BaseModel):
     __tablename__ = 'users'  # task 7
-
-    # Add `extend_existing=True` to avoid conflicts if table already exists
     __table_args__ = {'extend_existing': True}
 
     first_name = db.Column(db.String(50), nullable=False)
@@ -27,7 +24,7 @@ class User(BaseModel):
 
         # Validations
         self.validate_name()
-        self.validate_email()
+        #  self.validate_email()
 
     def validate_name(self):
         # First name length validation
@@ -37,18 +34,18 @@ class User(BaseModel):
         if not self.last_name or len(self.last_name) > 50:
             raise ValueError('Last name must be less than 50 characters.')
 
-    def validate_email(self):
-        from part3.hbnb.app.services.facade import HBnBFacade
-        facade = HBnBFacade()
-        # Checks valid email format  verify
-        email_regex = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
-        if not self.email or not re.match(email_regex, self.email):
-            raise ValueError('Invalid email format.')
-
-        # Checks email uniqueness
-        existing_user = facade.get_user_by_email(self.email)
-        if existing_user:
-            raise ValueError("A user with this email already exists.")
+    # def validate_email(self):
+    #     from part3.hbnb.app.services.facade import HBnBFacade
+    #     facade = HBnBFacade()
+    #     # Checks valid email format  verify
+    #     email_regex = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
+    #     if not self.email or not re.match(email_regex, self.email):
+    #         raise ValueError('Invalid email format.')
+    #
+    #     # Checks email uniqueness
+    #     existing_user = facade.get_user_by_email(self.email)
+    #     if existing_user:
+    #         raise ValueError("A user with this email already exists.")
 
     # This function should take a plaintext password,
     # hash it using bcrypt,

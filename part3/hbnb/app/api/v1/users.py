@@ -1,8 +1,6 @@
 #!/usr/bin/python3
 from flask_restx import Namespace, Resource, fields
 from flask_jwt_extended import jwt_required, get_jwt_identity
-
-# from ...models import user
 from ...services import facade
 
 api = Namespace('users', description='User operations')
@@ -94,7 +92,6 @@ class Users(Resource):
                  'email': user.email} for user in users], 200
 
 
-''' 
 @api.route('/update/<user_id>')
 class UserResource(Resource):
     @jwt_required()
@@ -120,4 +117,3 @@ class UserResource(Resource):
                 'first_name': updated_user.first_name,
                 'last_name': updated_user.last_name,
                 'email': updated_user.email}, 200
-'''

@@ -1,26 +1,26 @@
-from part3.hbnb.app.models.baseclass import BaseModel
-from part3.hbnb.app.models.place import Place
-from part3.hbnb.app.models.user import User
-from part3.hbnb.app import bcrypt, db
-import uuid
-import re
+from .baseclass import BaseModel
+from part3.hbnb.app import db
 
 
 class Review(BaseModel):
     __tablename__ = 'reviews'
+    __table_args__ = {'extend_existing': True}
 
     id = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.String, nullable=False)
     rating = db.Column(db.Integer, nullable=False)
 
-    def __init__(self, text, rating, place, user):
+    place_id = db.Column(db.Integer, db.ForeignKey('places.id'), nullable=False)  # Foreign key to Place
+    # user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)  # Foreign key to User
+
+    # Define the relationship to connect with users
+    # user = db.relationship('User', back_populates='reviews')
+    def __init__(self, text, rating, place_id, user_id):
         super().__init__()
         self.text = text
         self.rating = rating
-        # Store only the id of Place and User to avoid serialization issues
-        self.place_id = place.id if isinstance(place, Place) else place
-        self.user_id = user.id if isinstance(user, User) else user
-
+        self.place_id = place_id
+        self.user_id = user_id
         self.validations()
 
     def validations(self):

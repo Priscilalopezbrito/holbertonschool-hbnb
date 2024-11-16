@@ -1,6 +1,5 @@
 from part3.hbnb.app.models.review import Review
-from part3.hbnb.app.persistence.sqlalchemyrepository import SQLAlchemyRepository
-from part3.hbnb.app import db
+from part3.hbnb.app.persistence.repository import SQLAlchemyRepository
 
 
 class ReviewRepository(SQLAlchemyRepository):
