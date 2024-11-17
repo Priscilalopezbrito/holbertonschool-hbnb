@@ -26,7 +26,6 @@ class User(BaseModel):
 
         # Validations
         self.validate_name()
-        #  self.validate_email()
 
     def validate_name(self):
         # First name length validation

@@ -1,4 +1,3 @@
-# 2ab34846-98fb-4a47-b088-9305229dcb67
 #!/usr/bin/python3
 from flask_restx import Namespace, Resource, fields
 from part3.hbnb.app.services import facade

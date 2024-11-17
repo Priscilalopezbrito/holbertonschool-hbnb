@@ -5,7 +5,7 @@ from part3.hbnb.app import bcrypt, db
 
 
 class Place(BaseModel):
-    __tablename__ = 'place'  # task 8
+    __tablename__ = 'place'
     __table_args__ = {'extend_existing': True}
 
     title = db.Column(db.String(100), nullable=False)
