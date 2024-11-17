@@ -2,8 +2,6 @@
 from .baseclass import BaseModel
 from part3.hbnb.app.models.user import User
 from part3.hbnb.app import bcrypt, db
-import uuid
-import re
 
 
 class Place(BaseModel):
@@ -17,10 +15,6 @@ class Place(BaseModel):
     longitude = db.Column(db.Float, nullable=True)
     owner_id = db.Column(db.String(36), db.ForeignKey('user.id'), nullable=False)
 
-    '''
-    # One-to-Many relationship with Review
-    reviews = db.relationship('hbnb.app.models.review.Review', backref='place', lazy=True)
-    '''
     def __init__(self, title, description, price, latitude, longitude, owner_id):
         super().__init__()
         self.title = title

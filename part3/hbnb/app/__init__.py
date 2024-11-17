@@ -14,6 +14,7 @@ from part3.hbnb.app.api.v1.amenities import api as amenities_ns
 from part3.hbnb.app.api.v1.reviews import api as reviews_ns
 from part3.hbnb.app.api.v1.auth import api as auth_ns
 from part3.hbnb.app.api.v1.admin import api as admin_ns
+from part3.hbnb.app.api.v1.placeamenities import api as placeamenities_ns
 
 
 def create_app(config_class="config.DevelopmentConfig"):
@@ -49,5 +50,6 @@ def create_app(config_class="config.DevelopmentConfig"):
     api.add_namespace(reviews_ns, path='/api/v1/reviews')
     api.add_namespace(auth_ns, path='/api/v1/auth')
     api.add_namespace(admin_ns, path='/api/v1/admin')
+    api.add_namespace(placeamenities_ns, path='/api/v1/placeamenities')
 
     return app

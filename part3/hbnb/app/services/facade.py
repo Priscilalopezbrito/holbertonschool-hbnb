@@ -1,9 +1,11 @@
 #!/usr/bin/python3
-
+from part3.hbnb.app.models.placeamenity import PlaceAmenity
 from part3.hbnb.app.services.repositories.userrepository import UserRepository
 from part3.hbnb.app.services.repositories.amenityrepository import AmenityRepository
 from part3.hbnb.app.services.repositories.placerepository import PlaceRepository
 from part3.hbnb.app.services.repositories.reviewrepository import ReviewRepository
+from part3.hbnb.app.services.repositories.placeamenityrepository import PlaceAmenityRepository
+
 from part3.hbnb.app.models.user import User
 from part3.hbnb.app.models.amenity import Amenity
 from part3.hbnb.app.models.place import Place
@@ -16,6 +18,7 @@ class HBnBFacade:
         self.place_repo = PlaceRepository()
         self.review_repo = ReviewRepository()
         self.amenity_repo = AmenityRepository()
+        self.place_amenity_repo = PlaceAmenityRepository()
 
     # USER
     def create_user(self, user_data):
@@ -97,7 +100,7 @@ class HBnBFacade:
         return self.place_repo.get_all()
 
     # Updated `update_place` method in `HBnBFacade` class
-    def  update_place(self, place_id, place_data):
+    def update_place(self, place_id, place_data):
         place = self.place_repo.get(place_id)
         if not place:
             return None
@@ -181,3 +184,24 @@ class HBnBFacade:
         self.review_repo.delete(review_id)
 
         return True
+
+    # PLACE AMENITY
+
+    def create_place_amenity(self, amenity_data):
+
+        place_amenity = PlaceAmenity(
+            place_id=amenity_data['place_id'],
+            amenity_id=amenity_data['amenity_id']
+        )
+
+        # Add the review to the repository
+        self.place_amenity_repo.add(place_amenity)
+
+        return place_amenity
+
+    def get_place_amenity(self):
+        return self.place_amenity_repo.get_all()
+
+    def get_place_amenity_by_place(self, place_id):
+        return self.place_amenity_repo.get_by_attribute('place_id', place_id)
+
