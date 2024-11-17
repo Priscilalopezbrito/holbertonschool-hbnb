@@ -6,15 +6,11 @@ class Review(BaseModel):
     __tablename__ = 'review'
     __table_args__ = {'extend_existing': True}
 
-    id = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.String, nullable=False)
     rating = db.Column(db.Integer, nullable=False)
+    user_id = db.Column(db.String(36), db.ForeignKey('user.id'), nullable=False)
+    place_id = db.Column(db.Integer, db.ForeignKey('place.id'), nullable=False)
 
-    place_id = db.Column(db.Integer, db.ForeignKey('place.id'), nullable=False)  # Foreign key to Place
-    # user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)  # Foreign key to User
-
-    # Define the relationship to connect with users
-    # user = db.relationship('User', back_populates='reviews')
     def __init__(self, text, rating, place_id, user_id):
         super().__init__()
         self.text = text

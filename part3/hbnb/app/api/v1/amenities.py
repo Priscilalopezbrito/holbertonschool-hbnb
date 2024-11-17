@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 from flask_restx import Namespace, Resource, fields
-
 from part3.hbnb.app.models import amenity
 from part3.hbnb.app.services import facade
 
@@ -8,6 +7,7 @@ api = Namespace('amenities', description='Amenity operations')
 
 # Define the amenity model for input validation and documentation
 amenity_model = api.model('Amenity', {
+    'id': fields.String,
     'name': fields.String(required=True, description='Name of the amenity')
 })
 
@@ -60,7 +60,7 @@ class AmenityResource(Resource):
             api.abort(404, 'Amenity not found')
 
     @api.expect(amenity_model)
-    @api.response(200, 'Amenity updated successfully')
+    @api.response(201, 'Amenity updated successfully')
     @api.response(404, 'Amenity not found')
     @api.response(400, 'Invalid input data')
     def put(self, amenity_id):
@@ -72,7 +72,7 @@ class AmenityResource(Resource):
                 return {
                     'id': updated_amenity.id,
                     'name': updated_amenity.name
-                }, 200
+                }, 201
             else:
                 api.abort(404, 'Amenity not found')
         except Exception as e:

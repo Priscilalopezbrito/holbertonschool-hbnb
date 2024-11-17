@@ -2,10 +2,11 @@
 from .baseclass import BaseModel
 from part3.hbnb.app import bcrypt, db
 import re
+import uuid
 
 
 class User(BaseModel):
-    __tablename__ = 'user'  # task 7
+    __tablename__ = 'user'
     __table_args__ = {'extend_existing': True}
 
     first_name = db.Column(db.String(50), nullable=False)
@@ -20,7 +21,8 @@ class User(BaseModel):
         self.last_name = last_name
         self.email = email
         self.is_admin = is_admin
-        self.password = password
+        if password:
+            self.hash_password(password)
 
         # Validations
         self.validate_name()
@@ -34,31 +36,9 @@ class User(BaseModel):
         if not self.last_name or len(self.last_name) > 50:
             raise ValueError('Last name must be less than 50 characters.')
 
-    # def validate_email(self):
-    #     from part3.hbnb.app.services.facade import HBnBFacade
-    #     facade = HBnBFacade()
-    #     # Checks valid email format  verify
-    #     email_regex = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
-    #     if not self.email or not re.match(email_regex, self.email):
-    #         raise ValueError('Invalid email format.')
-    #
-    #     # Checks email uniqueness
-    #     existing_user = facade.get_user_by_email(self.email)
-    #     if existing_user:
-    #         raise ValueError("A user with this email already exists.")
-
-    # This function should take a plaintext password,
-    # hash it using bcrypt,
-    # and store the hashed version in
-    # the password field.
-
     def hash_password(self, password):
         """Hashes the password before storing it."""
         self.password = bcrypt.generate_password_hash(password).decode('utf-8')
-
-    # Compare a plaintext password with the hashed
-    # password stored in the password field, returning
-    # True if they match and False otherwise
 
     def verify_password(self, password):
         """Verifies if the provided password matches the hashed password."""

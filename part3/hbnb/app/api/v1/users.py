@@ -55,29 +55,29 @@ class UserResource(Resource):
             return {'error': 'User not found'}, 404
         return {'id': user.id, 'first_name': user.first_name, 'last_name': user.last_name, 'email': user.email}, 200
 
-    @jwt_required()
-    @api.expect(update_user_model, validate=True)
-    @api.response(200, 'User updated successfully')
-    @api.response(404, 'User not found')
-    def put(self, user_id):
-        """Update user information"""
-        current_user = get_jwt_identity()  # task 3
-        if current_user != user_id:
-            return {'error': 'Unauthorized action.'}, 401
-
-        user_data = api.payload
-
-        # Prevent modification email, password
-        if 'email' in user_data or 'password' in user_data:
-            return {'error': 'You cannot modify email or password.'}, 400
-
-        updated_user = facade.update_user(user_id, user_data)
-        if not updated_user:
-            return {'error': 'User not found'}, 404
-        return {'id': updated_user.id,
-                'first_name': updated_user.first_name,
-                'last_name': updated_user.last_name,
-                'email': updated_user.email}, 200
+    # @jwt_required()
+    # @api.expect(update_user_model, validate=True)
+    # @api.response(200, 'User updated successfully')
+    # @api.response(404, 'User not found')
+    # def put(self, user_id):
+    #     """Update user information"""
+    #     current_user = get_jwt_identity()  # task 3
+    #     if current_user != user_id:
+    #         return {'error': 'Unauthorized action.'}, 401
+    #
+    #     user_data = api.payload
+    #
+    #     # Prevent modification email, password
+    #     if 'email' in user_data or 'password' in user_data:
+    #         return {'error': 'You cannot modify email or password.'}, 400
+    #
+    #     updated_user = facade.update_user(user_id, user_data)
+    #     if not updated_user:
+    #         return {'error': 'User not found'}, 404
+    #     return {'id': updated_user.id,
+    #             'first_name': updated_user.first_name,
+    #             'last_name': updated_user.last_name,
+    #             'email': updated_user.email}, 200
 
 
 @api.route('/user-list')
@@ -95,13 +95,13 @@ class Users(Resource):
 @api.route('/update/<user_id>')
 class UserResource(Resource):
     @jwt_required()
-    @api.expect(user_model, validate=True)
+    @api.expect(update_user_model, validate=True)
     @api.response(200, 'User updated successfully')
     @api.response(404, 'User not found')
     def put(self, user_id):
         """Update user information"""
         current_user = get_jwt_identity()  # task 3
-        if current_user != user_id:
+        if current_user.get("id") != user_id:
             return {'error': 'Unauthorized action.'}, 401
 
         user_data = api.payload

@@ -1,3 +1,4 @@
+# 2ab34846-98fb-4a47-b088-9305229dcb67
 #!/usr/bin/python3
 from flask_restx import Namespace, Resource, fields
 from part3.hbnb.app.services import facade
@@ -39,39 +40,32 @@ place_model = api.model('Place', {
     'amenities': fields.List(fields.String, required=True, description="List of amenities ID's")  # friday 15
 })
 
+create_place_model = api.model('PlaceCreate', {
+    'title': fields.String(required=True, description='Title of the place'),
+    'description': fields.String(description='Description of the place'),
+    'price': fields.Float(required=True, description='Price per night'),
+    'latitude': fields.Float(required=True, description='Latitude of the place'),
+    'longitude': fields.Float(required=True, description='Longitude of the place'),
+    'owner_id': fields.String(required=True, description='ID of the owner')
+})
+
 
 @api.route('/')
 class PlaceList(Resource):
     @jwt_required()  # task 3: Secure the Endpoints with JWT Authentication
-    @api.expect(place_model)
+    @api.expect(create_place_model)
     @api.response(201, 'Place successfully created')
     @api.response(400, 'Invalid input data')
     def post(self):
         """Register a new place"""
         current_user = get_jwt_identity()  # task 3: Identify currently logged-in user
         place_data = api.payload
+
         # Assign id of authenticated user to owner_id
-        place_data['owner_id'] = current_user  # task 3
+        place_data['owner_id'] = current_user.get("id")  # task 3
         try:
             new_place = facade.create_place(place_data)
 
-            # Manually build the dictionary representation of amenities
-            amenities = [
-                {
-                    'id': amenity.id,
-                    'name': amenity.name
-                } for amenity in new_place.amenities
-            ]
-
-            # Manually build the dictionary representation of the owner
-            owner = {
-                'id': new_place.user_id.id,
-                'first_name': new_place.user_id.first_name,
-                'last_name': new_place.user_id.last_name,
-                'email': new_place.user_id.email
-            }
-
-            # Build the response dictionary for the place
             response_data = {
                 'id': new_place.id,
                 'title': new_place.title,
@@ -79,8 +73,7 @@ class PlaceList(Resource):
                 'price': new_place.price,
                 'latitude': new_place.latitude,
                 'longitude': new_place.longitude,
-                'owner': owner,
-                'amenities': amenities,
+                'owner': new_place.owner_id,
                 'created_at': new_place.created_at.isoformat(),
                 'updated_at': new_place.updated_at.isoformat()
             }
@@ -98,19 +91,6 @@ class PlaceList(Resource):
             # Manually serialize each place in the list
             places_data = []
             for place in places:
-                amenities = [
-                    {
-                        'id': amenity.id,
-                        'name': amenity.name
-                    } for amenity in place.amenities
-                ]
-
-                owner = {
-                    'id': place.user_id.id,
-                    'first_name': place.user_id.first_name,
-                    'last_name': place.user_id.last_name,
-                    'email': place.user_id.email
-                }
 
                 place_data = {
                     'id': place.id,
@@ -119,8 +99,7 @@ class PlaceList(Resource):
                     'price': place.price,
                     'latitude': place.latitude,
                     'longitude': place.longitude,
-                    'owner': owner,
-                    'amenities': amenities,
+                    'owner': place.owner_id,
                     'created_at': place.created_at.isoformat(),
                     'updated_at': place.updated_at.isoformat()
                 }
@@ -143,21 +122,6 @@ class PlaceResource(Resource):
             if not place:
                 return {'error': 'Place not found'}, 404
 
-            # Manually serialize the place
-            amenities = [
-                {
-                    'id': amenity.id,
-                    'name': amenity.name
-                } for amenity in place.amenities
-            ]
-
-            owner = {
-                'id': place.user_id.id,
-                'first_name': place.user_id.first_name,
-                'last_name': place.user_id.last_name,
-                'email': place.user_id.email
-            }
-
             place_data = {
                 'id': place.id,
                 'title': place.title,
@@ -165,8 +129,7 @@ class PlaceResource(Resource):
                 'price': place.price,
                 'latitude': place.latitude,
                 'longitude': place.longitude,
-                'owner': owner,
-                'amenities': amenities,
+                'owner': place.owner_id,
                 'created_at': place.created_at.isoformat(),
                 'updated_at': place.updated_at.isoformat()
             }
@@ -176,7 +139,7 @@ class PlaceResource(Resource):
             api.abort(400, str(e))
 
     @jwt_required()  # task 3: Secure the Endpoints with JWT Authentication
-    @api.expect(place_model)
+    @api.expect(create_place_model)
     @api.response(200, 'Place updated successfully')
     @api.response(404, 'Place not found')
     @api.response(400, 'Invalid input data')
@@ -190,26 +153,9 @@ class PlaceResource(Resource):
                 return {'error': 'Place not found'}, 404
 
             # task 3: If user is not owner, 403 error "Unauthorized action."
-            if updated_place.user_id.id != current_user:
+            if updated_place.user_id.id != current_user.get("id"):
                 return {'error': 'Unauthorized action.'}, 403
 
-            # Manually build the dictionary representation of amenities
-            amenities = [
-                {
-                    'id': amenity.id,
-                    'name': amenity.name
-                } for amenity in updated_place.amenities
-            ]
-
-            # Manually build the dictionary representation of the owner
-            owner = {
-                'id': updated_place.user_id.id,
-                'first_name': updated_place.user_id.first_name,
-                'last_name': updated_place.user_id.last_name,
-                'email': updated_place.user_id.email
-            }
-
-            # Build the response dictionary for the place
             response_data = {
                 'id': updated_place.id,
                 'title': updated_place.title,
@@ -217,8 +163,7 @@ class PlaceResource(Resource):
                 'price': updated_place.price,
                 'latitude': updated_place.latitude,
                 'longitude': updated_place.longitude,
-                'owner': owner,
-                'amenities': amenities,
+                'owner': updated_place.owner_id,
                 'created_at': updated_place.created_at.isoformat(),
                 'updated_at': updated_place.updated_at.isoformat()
             }

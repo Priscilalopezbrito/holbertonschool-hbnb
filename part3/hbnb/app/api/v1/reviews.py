@@ -32,17 +32,17 @@ class ReviewList(Resource):
             return 'Error Not Found', 404
 
         # Owner is not allowed to review their own place
-        if place.owner_id == current_user:
+        if place.owner_id == current_user.get("id"):
             return 'You cannot review your own place.', 400
 
         # Check if user already left a review
         review = facade.get_reviews_by_place(review_data['place_id'])
         for review in review:
-            if review.user_id == current_user:
+            if review.user_id == current_user.get("id"):
                 return 'You have already reviewed this place..', 400
 
         try:
-            review_data['user_id'] = current_user
+            review_data['user_id'] = current_user.get("id")
             new_review = facade.create_review(review_data)
 
             # Serialize the review

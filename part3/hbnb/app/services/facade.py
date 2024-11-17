@@ -13,8 +13,8 @@ from part3.hbnb.app.models.review import Review
 class HBnBFacade:
     def __init__(self):
         self.user_repo = UserRepository()
-        self.place_repo = PlaceRepository
-        self.review_repo = ReviewRepository
+        self.place_repo = PlaceRepository()
+        self.review_repo = ReviewRepository()
         self.amenity_repo = AmenityRepository()
 
     # USER
@@ -40,7 +40,7 @@ class HBnBFacade:
             return None
         for key, value in user_data.items():
             setattr(user, key, value)
-        self.user_repo.update(user, user_data)
+        self.user_repo.update(user.id, user_data)
         return user
 
     # AMENITY
@@ -51,6 +51,8 @@ class HBnBFacade:
 
     def get_amenity(self, amenity_id):
         amenity = self.amenity_repo.get(amenity_id)
+        if not amenity:
+            raise ValueError(f"Amenity with ID {amenity_id} not found")
         return amenity
 
     def get_all_amenities(self):
@@ -61,9 +63,12 @@ class HBnBFacade:
         amenity = self.amenity_repo.get(amenity_id)
         if not amenity:
             return None
+        allowed_fields = {'name'}
         for key, value in amenity_data.items():
-            setattr(amenity, key, value)
-        self.amenity_repo.update(amenity_id, amenity_data)
+            if key in allowed_fields:
+                setattr(amenity, key, value)
+
+        self.amenity_repo.update(amenity.id, amenity_data)
         return amenity
 
     # PLACE
@@ -77,19 +82,8 @@ class HBnBFacade:
         if not owner:
             raise Exception('Owner not found')
 
-        # Ensure amenities are in the correct format
-        amenity_ids = place_data.get('amenities', [])
-        if not isinstance(amenity_ids, list):
-            raise ValueError("Amenities should be provided as a list of IDs.")
-        amenities = []
-        for amenity_id in amenity_ids:
-            amenity = self.amenity_repo.get(amenity_id)
-            if amenity:
-                amenities.append(amenity)
-
         # Create the Place instance without amenities for now
-        place = Place(user_id=owner, **place_data)
-        place.amenities = amenities  # Assign amenities to the Place instance
+        place = Place(owner_id=owner_id, **place_data)
 
         # Add the Place instance to the repository
         self.place_repo.add(place)
@@ -103,7 +97,7 @@ class HBnBFacade:
         return self.place_repo.get_all()
 
     # Updated `update_place` method in `HBnBFacade` class
-    def update_place(self, place_id, place_data):
+    def  update_place(self, place_id, place_data):
         place = self.place_repo.get(place_id)
         if not place:
             return None
@@ -115,17 +109,9 @@ class HBnBFacade:
                 raise ValueError('Owner not found')
             place.user_id = owner
 
-        # Update amenities if they are provided
-        if 'amenities' in place_data:
-            amenities_ids = place_data['amenities']
-            amenities = [self.amenity_repo.get(amenity_id) for amenity_id in amenities_ids]
-            if None in amenities:
-                raise ValueError('One or more amenities not found')
-            place.amenities = amenities
-
         # Update other fields
         for key, value in place_data.items():
-            if key not in ['owner_id', 'amenities']:  # Skip these as they are already handled
+            if key not in ['owner_id']:  # Skip these as they are already handled
                 setattr(place, key, value)
 
         # Update the place in the repository
@@ -148,8 +134,8 @@ class HBnBFacade:
         review = Review(
             text=review_data['text'],
             rating=review_data['rating'],
-            place_id=place,
-            user_id=user
+            place_id=place.id,
+            user_id=user.id
         )
 
         # Add the review to the repository

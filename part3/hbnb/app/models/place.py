@@ -5,60 +5,43 @@ from part3.hbnb.app import bcrypt, db
 import uuid
 import re
 
-# Association Table for Many-to-Many relationship between Place and Amenity  task 9
-'''  
-place_amenity = db.Table(
-    'place_amenity',
-    db.Model.metadata,
-    db.Column('place_id', db.Integer, db.ForeignKey('places.id'), primary_key=True),
-    db.Column('amenity_id', db.Integer, db.ForeignKey('amenities.id'), primary_key=True)
-)
-'''
-
 
 class Place(BaseModel):
     __tablename__ = 'place'  # task 8
-    # Allow reuse if table already exists in MetaData
     __table_args__ = {'extend_existing': True}
 
-    id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
     description = db.Column(db.String, nullable=True)
     price = db.Column(db.Float, nullable=False)
     latitude = db.Column(db.Float, nullable=True)
     longitude = db.Column(db.Float, nullable=True)
+    owner_id = db.Column(db.String(36), db.ForeignKey('user.id'), nullable=False)
 
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)  # task 9
-
+    '''
     # One-to-Many relationship with Review
     reviews = db.relationship('hbnb.app.models.review.Review', backref='place', lazy=True)
-
-    def __init__(self, title, description, price, latitude, longitude, user_id, amenities):
+    '''
+    def __init__(self, title, description, price, latitude, longitude, owner_id):
         super().__init__()
         self.title = title
         self.description = description
         self.price = price
         self.latitude = latitude
         self.longitude = longitude
-        self.user_id = user_id
-        self.reviews = []  # List to store related reviews
-        self.amenities = []  # List to store related amenities
+        self.owner_id = owner_id
 
         # Validations
         self.validations()
 
     def validations(self):
+        # Ensure the owner exists
+        user = db.session.query(User).filter_by(id=self.owner_id).first()
+        if not user:
+            raise ValueError('Owner must be a valid User')
+
         # Validates required length of title
         if not self.title or len(self.title) > 100:
             raise ValueError('Maximum length of 100 characters')
-
-        # Ensures the owner exists
-        ''' 
-        if not isinstance(self.user_id, User):
-            raise ValueError('Owner must be a User')
-        '''
-        if not db.session.query(User).get(self.user_id):
-            raise ValueError('Owner must be a valid User')
 
         # Price must be a positive value
         if self.price < 1:
