@@ -107,6 +107,7 @@ class ReviewResource(Resource):
         else:
             return {'error': 'Review does not exist'}, 404
 
+    @jwt_required()  # task 3: Secure Endpoints with JWT Authentication
     @api.expect(review_model)
     @api.response(200, 'Review updated successfully')
     @api.response(404, 'Review not found')
@@ -118,7 +119,7 @@ class ReviewResource(Resource):
 
         review = facade.get_review(review_id)  # task 3: Check user_id matches  authenticated user.
 
-        if review.user_id != current_user:
+        if review.user_id != current_user.get("id"):
             return {'error': 'Unauthorized action.'}, 403
 
         try:
@@ -140,6 +141,7 @@ class ReviewResource(Resource):
         except Exception as e:
             return {'error': str(e)}, 400
 
+    @jwt_required()
     @api.response(200, 'Review deleted successfully')
     @api.response(404, 'Review not found')
     def delete(self, review_id):
@@ -147,7 +149,7 @@ class ReviewResource(Resource):
         current_user = get_jwt_identity()  # task 3: Ensure the user is authenticated
         review = facade.get_review(review_id)  # task 3: Check user_id matches  authenticated user.
 
-        if review.user_id != current_user:
+        if review.user_id != current_user.get("id"):
             return {'error': 'Unauthorized action.'}, 403
 
         try:
