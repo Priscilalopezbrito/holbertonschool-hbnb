@@ -1,7 +1,7 @@
--- Enable foreign key constraints (important for SQLite)
+-- Enable foreign key constraints
 PRAGMA foreign_keys = ON;
 
--- Create User Table
+-- User Table
 CREATE TABLE IF NOT EXISTS User (
     id CHAR(36) PRIMARY KEY,
     first_name VARCHAR(255) NOT NULL,
@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS User (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
--- Create Place Table
+-- Place Table
 CREATE TABLE IF NOT EXISTS Place (
     id CHAR(36) PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS Place (
     FOREIGN KEY (owner_id) REFERENCES User(id) ON DELETE CASCADE
 );
 
--- Create Review Table
+-- Review Table
 CREATE TABLE IF NOT EXISTS Review (
     id CHAR(36) PRIMARY KEY,
     text TEXT NOT NULL,
@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS Review (
     UNIQUE (user_id, place_id)
 );
 
--- Create Amenity Table
+-- Amenity Table
 CREATE TABLE IF NOT EXISTS Amenity (
     id CHAR(36) PRIMARY KEY,
     name VARCHAR(255) UNIQUE NOT NULL,
@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS Amenity (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
--- Create Place_Amenity Table
+-- Place_Amenity Table
 CREATE TABLE IF NOT EXISTS Place_Amenity (
     place_id CHAR(36),
     amenity_id CHAR(36),
