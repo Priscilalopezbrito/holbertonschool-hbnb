@@ -4,9 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Review</title>
+    <link rel="icon" href="images/icon.png" type="image/png">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+<header>
+    <img src="images/logo.png" alt="Logo">
+    <nav>
+        <a href="login.html" id="login-link">Login</a>
+    </nav>
+</header>
 <main>
     <!-- Add something to idfentify the place you're reviewing -->
     <form id="review-form">
@@ -16,10 +23,18 @@
         <label for="rating">Rating:</label>
         <select id="rating" name="rating" required>
             <!-- Options for rating -->
+            <option value="1">1 Star</option>
+            <option value="2">2 Stars</option>
+            <option value="3">3 Stars</option>
+            <option value="4">4 Stars</option>
+            <option value="5">5 Stars</option>
         </select>
-        <button type="submit">Submit Review</button>
+        <button type="submit" class="submit-button">Submit Review</button>
     </form>
 </main>
+<footer>
+    &copy; 2024 HBnB Evolution. All rights reserved.
+</footer>
 <script src="scripts.js"></script>
 </body>
 </html>

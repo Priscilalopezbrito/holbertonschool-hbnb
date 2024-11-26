@@ -4,25 +4,49 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>List of Places</title>
+    <link rel="icon" href="images/icon.png" type="image/png">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<header>
-    <nav>
-        <a href="login.html" id="login-link">Login</a>
-    </nav>
+<header class="header">
+    <img src="images/logo.png" alt="HBnB Logo" class="logo">
+    <a href="login.html" class="login-button" aria-label="Login to your account">Login</a>
 </header>
+
 <main>
     <section id="filter">
-        <label for="price-filter">Max Price:</label>
-        <select id="price-filter">
-            <!-- Options will be populated dynamically -->
+        <label for="price-filter" class="filter-label">Max Price:</label>
+        <select id="price-filter" class="price-dropdown">
+            <option value="all">All</option>
+            <option value="100">$100</option>
+            <option value="150">$150</option>
+            <option value="200">$200</option>
         </select>
     </section>
-    <section id="places-list">
-        <!-- List of places will be populated dynamically -->
+
+    <section id="places-list" class="places-container">
+        <div class="place-card">
+            <h3>Beautiful Beach House</h3>
+            <p>Price per night: $150</p>
+            <button class="details-button" onclick="location.href='place.html'">View Details</button>
+        </div>
+        <div class="place-card">
+            <h3>Cozy Cabin</h3>
+            <p>Price per night: $100</p>
+            <button class="details-button" onclick="location.href='place.html'">View Details</button>
+        </div>
+        <div class="place-card">
+            <h3>Modern Apartment</h3>
+            <p>Price per night: $200</p>
+            <button class="details-button" onclick="location.href='place.html'">View Details</button>
+        </div>
     </section>
 </main>
+
+<footer>
+    <p>&copy; 2024 HBnB Evolution. All rights reserved.</p>
+</footer>
+
 <script src="scripts.js"></script>
 </body>
 </html>
