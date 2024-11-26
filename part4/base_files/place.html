@@ -20,8 +20,8 @@
 <main>
     <!-- Place Details Section -->
     <section id="place-details" class="place-details place-info">
+        <h1>Place Name</h1>
         <div class="place-card">
-            <h1>Place Name</h1>
             <p><strong>Host:</strong> John Doe</p>
             <p><strong>Price per night:</strong> $200</p>
             <p><strong>Description:</strong> A beautiful place with stunning views.</p>
@@ -71,6 +71,21 @@
             <button type="submit">Submit</button>
         </form>
     </section>
+    <form id="review-form">
+        <h2>Add a Review</h2>
+        <label for="review">Your Review:</label>
+        <textarea id="review" name="review" required></textarea>
+        <label for="rating">Rating:</label>
+        <select id="rating" name="rating" required>
+            <!-- Options for rating -->
+            <option value="1">1 Star</option>
+            <option value="2">2 Stars</option>
+            <option value="3">3 Stars</option>
+            <option value="4">4 Stars</option>
+            <option value="5">5 Stars</option>
+        </select>
+        <button type="submit" class="submit-button">Submit Review</button>
+    </form>
 </main>
 
 <footer>
