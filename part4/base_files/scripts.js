@@ -77,7 +77,9 @@ async function fetchPlaceDetails(token, place_id) {
         if (response.ok) {
             const place = await response.json();
             console.log('Place details fetched successfully:', place);
-            displayPlaceDetails(place);
+
+            const user = await fetchUserById(token, place.owner);
+            displayPlaceDetails(place, user);
         } else {
             console.error('Failed to fetch place details:', response.statusText);
         }
@@ -87,7 +89,7 @@ async function fetchPlaceDetails(token, place_id) {
 }
 
 // Display place details
-function displayPlaceDetails(place) {
+function displayPlaceDetails(place, user) {
     const placeDetailsSection = document.getElementById('place-details');
     if (!placeDetailsSection) {
         console.error('Missing element with ID "place-details"');
@@ -100,7 +102,7 @@ function displayPlaceDetails(place) {
     // Populate the place details
     placeDetailsSection.innerHTML = `
         <h2>${place.title}</h2>
-        <p><strong>Host:</strong> ${place.hostname ? place.hostname : 'Unknown'}</p>
+        <p><strong>Host:</strong> ${user ? `${user.first_name} ${user.last_name}` : 'Unknown'}</p>
         <p><strong>Price per night:</strong> $${place.price}</p>
         <p><strong>Description:</strong> ${place.description}</p>
         <p><strong>Amenities:</strong> ${place.amenities && Array.isArray(place.amenities) ? place.amenities.join(', ') : 'No amenities listed'}</p>
@@ -242,5 +244,31 @@ async function loginUser(email, password) {
     } catch (error) {
         console.error('Error logging in PLB:', error);
         alert('An error occurred while trying to login. Try again PLB.');
+    }
+}
+
+
+
+async function fetchUserById(token, userId) {
+    try {
+        const response = await fetch(`http://192.168.0.7:5050/api/v1/users/${userId}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (response.ok) {
+            const user = await response.json();
+            console.log('User details fetched successfully:', user);
+            return user; // Ensure the user data is returned
+        } else {
+            console.error('Failed to fetch user details:', response.statusText);
+            return null; // Return null if the fetch fails
+        }
+    } catch (error) {
+        console.error('Error fetching user details:', error);
+        return null; // Return null if an error occurs
     }
 }
