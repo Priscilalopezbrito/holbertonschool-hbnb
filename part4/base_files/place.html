@@ -19,77 +19,40 @@
 
 <main>
     <!-- Place Details Section -->
-    <section id="place-details" class="place-details place-info">
-        <h1>Place Name</h1>
-        <div class="place-card">
-            <p><strong>Host:</strong> John Doe</p>
-            <p><strong>Price per night:</strong> $200</p>
-            <p><strong>Description:</strong> A beautiful place with stunning views.</p>
-            <p><strong>Amenities:</strong> WiFi, Pool, Air Conditioning</p>
-        </div>
+    <section id="place-details" class="place-details place-info place-card-adjusted">
+        <!-- Dynamically populated using JavaScript -->
     </section>
 
     <!-- Reviews Section -->
-    <section id="reviews">
+    <section id="reviews" class="reviews">
         <h2>Reviews</h2>
-
-        <!-- Review Card -->
-        <div class="review-card">
-            <p><strong>Priscila Lopez:</strong></p>
-            <p>It was good!</p>
-            <div class="rating">
-                <span>Rating:</span>
-                <span class="fas fa-star"></span>
-                <span class="fas fa-star"></span>
-                <span class="fas fa-star"></span>
-                <span class="fas fa-star"></span>
-                <span class="far fa-star"></span>
-            </div>
-        </div>
-
-        <!-- Review Card -->
-        <div class="review-card">
-            <p><strong>Priscila Lopez:</strong></p>
-            <p>Bad Wi-Fi</p>
-            <div class="rating">
-                <span>Rating:</span>
-                <span class="fas fa-star"></span>
-                <span class="fas fa-star"></span>
-                <span class="fas fa-star"></span>
-                <span class="fas fa-star"></span>
-                <span class="far fa-star"></span>
-            </div>
-        </div>
+        <!-- Reviews will be dynamically populated using JavaScript -->
     </section>
 
     <!-- Add Review Section -->
-    <section id="add-review">
-        <form id="review-form" class="add-review form" style="display: none;">
+    <section id="add-review" style="display: none;">
+        <h3>Add a Review</h3>
+        <form id="review-form" class="add-review-form">
             <label for="review-text">Review:</label>
             <textarea id="review-text" name="review-text" required></textarea>
 
-            <button type="submit">Submit</button>
+            <label for="rating">Rating:</label>
+            <select id="rating" name="rating" required>
+                <option value="1">1 Star</option>
+                <option value="2">2 Stars</option>
+                <option value="3">3 Stars</option>
+                <option value="4">4 Stars</option>
+                <option value="5">5 Stars</option>
+            </select>
+
+            <button type="submit" class="submit-button">Submit Review</button>
         </form>
     </section>
-    <form id="review-form">
-        <h2>Add a Review</h2>
-        <label for="review">Your Review:</label>
-        <textarea id="review" name="review" required></textarea>
-        <label for="rating">Rating:</label>
-        <select id="rating" name="rating" required>
-            <!-- Options for rating -->
-            <option value="1">1 Star</option>
-            <option value="2">2 Stars</option>
-            <option value="3">3 Stars</option>
-            <option value="4">4 Stars</option>
-            <option value="5">5 Stars</option>
-        </select>
-        <button type="submit" class="submit-button">Submit Review</button>
-    </form>
 </main>
 
 <footer>
-    <p>  &copy; 2024 HBnB Evolution. All rights reserved.</p>
+    <p>&copy; 2024 HBnB Evolution. All rights reserved.</p>
 </footer>
+<script src="scripts.js"></script>
 </body>
 </html>
